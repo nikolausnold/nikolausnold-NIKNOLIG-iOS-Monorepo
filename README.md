@@ -24,7 +24,7 @@ On macOS with Xcode and the iOS SDK installed, build each app for a simulator:
 
 ```sh
 xcodebuild -project apps/niknolig-ios/NIKNOLIG.xcodeproj -scheme NIKNOLIG -destination 'generic/platform=iOS Simulator' build
-xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme 'NIKNOLIG Defense' -destination 'generic/platform=iOS Simulator' build
+xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme NIKNOLIGDefense -destination 'generic/platform=iOS Simulator' build
 ```
 
 The current Linux environment cannot run `xcodebuild` or validate the apps on physical iOS devices. See [build and device verification](docs/architecture/build-and-device-verification.md) and [backend integration status](docs/android-integration/backend-contracts.md). SecurityChain P0 remains a release blocker.

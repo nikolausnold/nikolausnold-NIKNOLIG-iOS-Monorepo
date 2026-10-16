@@ -61,6 +61,6 @@ jobs:
       - name: Build NIKNOLIG Defense
         run: |
           xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj \
-            -scheme 'NIKNOLIG Defense' -configuration "$BUILD_CONFIGURATION" \
+            -scheme NIKNOLIGDefense -configuration "$BUILD_CONFIGURATION" \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO build
