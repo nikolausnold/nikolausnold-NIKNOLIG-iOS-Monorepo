@@ -11,6 +11,20 @@ The shared source of truth is the `nikolausnold/NIKNOLIG-Monorepo` backend contr
 
 The contract owner must confirm the current revision and approve compatible contract changes before this mirror is expanded. Unknown error codes fail closed. No backend URLs, request/response operations, roles, or data-transfer capabilities have been invented.
 
+## iOS resource allocation and authorization status
+
+| Resource or control | iOS assignment/status |
+| --- | --- |
+| Production backend host | **OFFEN**. `https://backend.invalid` is a placeholder only; no production host is approved or configured. |
+| Supabase project, URL, schema, tables, buckets, or functions | **OFFEN / NOT ASSIGNED**. The iOS apps have no Supabase SDK, project configuration, or connection. No Supabase resource is approved for iOS access. |
+| Credentials or client secrets | None are configured. Never commit tokens, service-role keys, signing credentials, or other secrets. |
+| Authentication and token lifecycle | **OFFEN / NOT IMPLEMENTED**. Neither iOS app signs users in or sends credentials. |
+| Server-side authorization and app-area roles | **OFFEN / NOT IMPLEMENTED**. No operational authorization API or policy has been approved. |
+| Row-level security (RLS) and tenant isolation | **OFFEN / NOT IMPLEMENTED OR VERIFIED**. No iOS-accessible Supabase data exists in this foundation; no client-side check is a substitute for server-side authorization or RLS. |
+| Currently declared API surface | Contract-only `GET /health/live` and `GET /health/ready`; requests can be constructed for HTTPS origins but are not sent by the apps and have no approved host. |
+
+Authentication, server-side authorization, RLS, and tenant separation must be enforced and verified by the backend for any future iOS-enabled data/API access, at the same policy boundary used for Android and web. The client must not select or expand its resource access based on an app-supplied tenant identifier. Until an owner approves the project/resource mapping and access policies, iOS must make no Supabase or production-backend requests.
+
 ## Android compatibility boundaries
 
 The Android apps remain in their separate repository and were not modified. Their current application IDs are `com.niknolig.app` and `com.niknolig.defense`; the iOS targets use those corresponding identifiers while retaining independent iOS app bundles and security domains. The Android multidevice/sensor design is explicitly blocked and describes its JSON schemas as proposals rather than wired APIs. iOS must not infer permission or authorization from those schemas.

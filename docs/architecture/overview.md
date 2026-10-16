@@ -4,6 +4,8 @@
 
 NIKNOLIG and NIKNOLIG Defense are separate iOS application targets, each with its own Xcode project, bundle identifier, entry point, UI, signing identity, and release lifecycle. The bundle identifiers currently match the Android monorepo (`com.niknolig.app` and `com.niknolig.defense`). Shared Swift packages provide libraries only; they do not share app identity, local storage access groups, credentials, or authorization.
 
+This repository contains iOS projects and Swift packages only. It has no Android Gradle configuration or web application/build configuration. iOS validation is run by the dedicated `iOS validation` workflow; it tests the Swift packages and builds each iOS app as an unsigned simulator build. Android and web builds remain in their respective repositories and workflows.
+
 The app targets are deliberately thin SwiftUI shells. They show the current security gate and contract-only health paths. They do not sign in, make network requests, pair devices, transfer data, or access sensors.
 
 ## Swift packages
@@ -23,6 +25,8 @@ Device migration/linking is not implemented. The Android integration design requ
 ## Security and release gate
 
 SecurityChain P0 is an unconditional blocker. The shared status in this foundation is a visible fail-closed marker, not evidence of compliance or an authorization decision. The concrete P0 criteria, threat-model approval, identity provider, token lifecycle, app-area roles, permitted actions, audit requirements, and recovery process are still missing. Do not enable authentication, backend operations, device switching, sensors, or production releases until those decisions are approved and independently verified.
+
+Production signing and distribution are **OFFEN**. The Xcode targets have separate bundle identifiers and automatic-signing build settings, but no development team, provisioning profile, distribution certificate, App Store Connect configuration, or release workflow is assigned here. CI intentionally performs unsigned simulator builds. Do not add signing material or credentials to this repository.
 
 ## Build and device verification
 
