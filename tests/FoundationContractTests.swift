@@ -11,7 +11,14 @@ final class FoundationContractTests: XCTestCase {
         let request = try HealthEndpoint.ready.request(baseURL: URL(string: "https://api.example.test")!)
         XCTAssertEqual(request.url?.absoluteString, "https://api.example.test/health/ready")
         XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertEqual(request.timeoutInterval, 30)
         XCTAssertEqual(request.value(forHTTPHeaderField: "Accept"), "application/json")
+
+        let customTimeoutRequest = try HealthEndpoint.live.request(
+            baseURL: URL(string: "https://api.example.test")!,
+            timeoutInterval: 5
+        )
+        XCTAssertEqual(customTimeoutRequest.timeoutInterval, 5)
     }
 
     func testHealthRequestRejectsNonHTTPSAndQueryParametersInBaseURL() {
@@ -23,6 +30,17 @@ final class FoundationContractTests: XCTestCase {
             XCTAssertThrowsError(
                 try HealthEndpoint.live.request(baseURL: URL(string: value)!)
             )
+        }
+
+        for timeoutInterval in [0, -1, .infinity, .nan] {
+            XCTAssertThrowsError(
+                try HealthEndpoint.live.request(
+                    baseURL: URL(string: "https://api.example.test")!,
+                    timeoutInterval: timeoutInterval
+                )
+            ) { error in
+                XCTAssertEqual(error as? HealthRequestError, .invalidTimeoutInterval)
+            }
         }
     }
 

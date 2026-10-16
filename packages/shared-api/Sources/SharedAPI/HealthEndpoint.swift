@@ -10,7 +10,11 @@ public enum HealthEndpoint: String, CaseIterable, Sendable {
 
     public var path: String { rawValue }
 
-    public func request(baseURL: URL) throws -> URLRequest {
+    public func request(baseURL: URL, timeoutInterval: TimeInterval = 30) throws -> URLRequest {
+        guard timeoutInterval.isFinite, timeoutInterval > 0 else {
+            throw HealthRequestError.invalidTimeoutInterval
+        }
+
         guard
             var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: false),
             components.scheme?.lowercased() == "https",
@@ -31,6 +35,7 @@ public enum HealthEndpoint: String, CaseIterable, Sendable {
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.timeoutInterval = timeoutInterval
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         return request
     }
@@ -38,6 +43,7 @@ public enum HealthEndpoint: String, CaseIterable, Sendable {
 
 public enum HealthRequestError: Error, Equatable, Sendable {
     case invalidBaseURL
+    case invalidTimeoutInterval
 }
 
 public typealias HealthResponse = HealthStatus

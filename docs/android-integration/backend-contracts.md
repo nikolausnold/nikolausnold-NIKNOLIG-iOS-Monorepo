@@ -29,3 +29,18 @@ The following must be supplied and approved before operational integration:
 6. Supported OS/device matrix, recovery and key rotation rules, and security review for any transport or dependency.
 
 Until all relevant dependencies are approved, do not connect production services, add authentication screens, store live credentials, pair devices, transfer private data, or request sensor permission.
+
+## iOS connection readiness and Hetzner blockers
+
+The iOS foundation can construct only HTTPS `GET` requests for the two health paths. The caller must supply the HTTPS base URL; there is no configured production host or default endpoint. Requests use a 30-second timeout by default, which callers can override. The apps do not currently send requests or attach credentials.
+
+The existing Apple Keychain adapter stores data with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`; it provides secure storage primitives, not an approved token lifecycle or authentication implementation. Do not add bearer-token handling until the issuer, claims/audience, refresh, revocation, and device-binding contracts are approved.
+
+For connection to the shared NOLD Hetzner server, the backend/operator must still provide:
+
+- the approved HTTPS hostname and port, DNS/environment mapping, and confirmation that the service is deployed and reachable from iOS clients;
+- a valid TLS certificate chain and renewal/rotation ownership for that hostname;
+- the deployed, versioned health/API contract, including readiness semantics and any operational app endpoints (the current OpenAPI mirror defines only health);
+- the approved authentication and authorization flows and SecurityChain-P0 sign-off described above.
+
+Until those values and approvals exist, keep the endpoint caller-configured and do not substitute `backend.invalid` or another guessed address.
