@@ -28,7 +28,7 @@ jobs:
             scheme: NIKNOLIG
           - app: NIKNOLIG Defense
             project: apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj
-            scheme: NIKNOLIG Defense
+            scheme: NIKNOLIGDefense
     steps:
       - uses: actions/checkout@v4
       - name: Build iOS simulator app without signing

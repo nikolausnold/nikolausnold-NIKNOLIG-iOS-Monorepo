@@ -14,7 +14,7 @@ The iOS application projects require macOS, Xcode with an iOS SDK, and iOS 17 or
 
 ```sh
 xcodebuild -project apps/niknolig-ios/NIKNOLIG.xcodeproj -scheme NIKNOLIG -destination 'generic/platform=iOS Simulator' build
-xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme 'NIKNOLIG Defense' -destination 'generic/platform=iOS Simulator' build
+xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme NIKNOLIGDefense -destination 'generic/platform=iOS Simulator' build
 ```
 
 An Xcode build is not a release approval. Production signing, provisioning, and distribution are **OFFEN** and require a separately approved iOS release process. To install on a physical device, select an authorized development team and provisioning profile in Xcode, then verify each app independently on supported iPhone and iPad hardware. No signing credentials or device registration are included in this repository.

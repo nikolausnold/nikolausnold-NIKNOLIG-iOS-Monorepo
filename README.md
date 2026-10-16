@@ -13,6 +13,12 @@ Independent SwiftUI foundations for NIKNOLIG and NIKNOLIG Defense, with local Sw
 - `tests/` — Swift package contract and fail-closed behavior tests.
 - `.github/workflows/ios-validation.yml` — iOS-only Swift package tests and unsigned builds for both iOS apps.
 
+## Related repositories
+
+- Android Defense app: `-niknolig-defense` (repository name supplied by the owner).
+- Defense website: [`nikolausnold/NIKNOLIG-DEFENSE`](https://github.com/nikolausnold/NIKNOLIG-Defense), not the Android app repository.
+- iOS apps: this repository. Its validation workflow builds only the local iOS projects; it does not check out the Android app or website.
+
 ## Available validation
 
 Run the cross-package tests from the repository root:
@@ -25,7 +31,7 @@ On macOS with Xcode and the iOS SDK installed, build each app for a simulator:
 
 ```sh
 xcodebuild -project apps/niknolig-ios/NIKNOLIG.xcodeproj -scheme NIKNOLIG -destination 'generic/platform=iOS Simulator' build
-xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme 'NIKNOLIG Defense' -destination 'generic/platform=iOS Simulator' build
+xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme NIKNOLIGDefense -destination 'generic/platform=iOS Simulator' build
 ```
 
 The current Linux environment cannot run `xcodebuild` or validate the apps on physical iOS devices. See [build and device verification](docs/architecture/build-and-device-verification.md) and [backend integration status](docs/android-integration/backend-contracts.md). SecurityChain P0 remains a release blocker.
