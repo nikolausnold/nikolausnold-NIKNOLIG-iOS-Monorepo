@@ -26,6 +26,10 @@ private struct FoundationHomeView: View {
             Text("No sign-in, device linking, backend data, or sensor access is enabled.")
             Text("Contract paths: \(HealthEndpoint.allCases.map(\.path).joined(separator: ", "))")
                 .font(.footnote)
+            Link(
+                "NIKNOLIG Defense Website",
+                destination: URL(string: "https://nikolausnold.github.io/NIKNOLIG-Defense/")!
+            )
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

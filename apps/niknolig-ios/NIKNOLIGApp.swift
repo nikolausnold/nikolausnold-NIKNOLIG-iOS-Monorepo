@@ -35,6 +35,7 @@ private struct FoundationHomeView: View {
             Text("App identity: \(bundleIdentifier)")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+            Link("NIKNOLIG Website", destination: URL(string: "https://nikolausnold.github.io/NIKNOLIG/")!)
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
