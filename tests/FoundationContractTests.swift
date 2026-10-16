@@ -14,13 +14,16 @@ final class FoundationContractTests: XCTestCase {
         XCTAssertEqual(request.value(forHTTPHeaderField: "Accept"), "application/json")
     }
 
-    func testHealthRequestRejectsNonHTTPSAndCredentialedBaseURLs() {
+    func testHealthRequestRejectsNonHTTPSAndQueryParametersInBaseURL() {
         XCTAssertThrowsError(
             try HealthEndpoint.live.request(baseURL: URL(string: "http://api.example.test")!)
         )
-        XCTAssertThrowsError(
-            try HealthEndpoint.live.request(baseURL: URL(string: "https://api.example.test?x=1")!)
-        )
+        let invalidBaseURLs = ["https://api.example.test?x=1"]
+        for value in invalidBaseURLs {
+            XCTAssertThrowsError(
+                try HealthEndpoint.live.request(baseURL: URL(string: value)!)
+            )
+        }
     }
 
     func testHealthAndErrorModelsMatchBackendContract() throws {
@@ -35,7 +38,15 @@ final class FoundationContractTests: XCTestCase {
         )
         XCTAssertEqual(envelope.error.code, .serviceUnavailable)
         XCTAssertEqual(envelope.error.requestId.uuidString.lowercased(), "00000000-0000-4000-8000-000000000000")
-        XCTAssertEqual(APIErrorCode.allCases.count, 14)
+        XCTAssertEqual(
+            Set(APIErrorCode.allCases.map(\.rawValue)),
+            [
+                "AUTHENTICATION_REQUIRED", "AUTHENTICATION_INVALID", "AUTHORIZATION_DENIED",
+                "APP_AREA_MISMATCH", "DEVICE_IDENTITY_UNVERIFIED", "PAIRING_REQUIRED",
+                "PAIRING_EXPIRED", "REPLAY_DETECTED", "VALIDATION_FAILED", "RATE_LIMITED",
+                "CONFLICT", "NOT_FOUND", "SERVICE_UNAVAILABLE", "INTERNAL_ERROR"
+            ]
+        )
     }
 
     func testUnknownBackendErrorCodeFailsClosed() {

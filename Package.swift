@@ -17,7 +17,8 @@ let package = Package(
                 .product(name: "SharedModels", package: "shared-models"),
                 .product(name: "SharedSecurity", package: "shared-security")
             ],
-            path: "tests"
+            path: "tests",
+            exclude: ["README.md"]
         )
     ]
 )
