@@ -28,14 +28,41 @@ jobs:
             scheme: NIKNOLIG
           - app: NIKNOLIG Defense
             project: apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj
-            scheme: NIKNOLIG Defense
+            scheme: NIKNOLIGDefense
     steps:
       - uses: actions/checkout@v4
+      - name: Verify shared scheme is available
+        env:
+          PROJECT: ${{ matrix.project }}
+          SCHEME: ${{ matrix.scheme }}
+        run: |
+          scheme_list="$(xcodebuild -list -project "$PROJECT" 2>&1)" || {
+            printf '%s\n' "$scheme_list"
+            echo "::error::Unable to list schemes for project '$PROJECT'."
+            exit 1
+          }
+          printf '%s\n' "$scheme_list"
+          if ! printf '%s\n' "$scheme_list" | awk -v expected="$SCHEME" '
+            /^[[:space:]]*Schemes:[[:space:]]*$/ { in_schemes = 1; next }
+            in_schemes && /^[[:space:]]/ {
+              name = $0
+              sub(/^[[:space:]]+/, "", name)
+              sub(/[[:space:]]+$/, "", name)
+              if (name == expected) found = 1
+            }
+            END { exit !found }
+          '; then
+            echo "::error::Shared scheme '$SCHEME' is not available in '$PROJECT'. Commit its .xcscheme file under xcshareddata/xcschemes/."
+            exit 1
+          fi
       - name: Build iOS simulator app without signing
+        env:
+          PROJECT: ${{ matrix.project }}
+          SCHEME: ${{ matrix.scheme }}
         run: >-
           xcodebuild
-          -project "${{ matrix.project }}"
-          -scheme "${{ matrix.scheme }}"
+          -project "$PROJECT"
+          -scheme "$SCHEME"
           -destination "generic/platform=iOS Simulator"
           CODE_SIGNING_ALLOWED=NO
           build
