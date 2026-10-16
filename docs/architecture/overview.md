@@ -2,7 +2,7 @@
 
 ## App boundaries
 
-NIKNOLIG and NIKNOLIG Defense are separate iOS application targets, each with its own Xcode project, bundle identifier, entry point, UI, signing identity, and release lifecycle. The bundle identifiers currently match the Android monorepo (`com.niknolig.app` and `com.niknolig.defense`). Shared Swift packages provide libraries only; they do not share app identity, local storage access groups, credentials, or authorization.
+NIKNOLIG and NIKNOLIG Defense are separate iOS application targets, each with its own Xcode project, bundle identifier, entry point, UI, signing configuration boundary, and release lifecycle. The bundle identifiers currently match the Android monorepo (`com.niknolig.app` and `com.niknolig.defense`). Shared Swift packages provide libraries only; they do not share app identity, local storage access groups, credentials, or authorization.
 
 This repository contains iOS projects and Swift packages only. It has no Android Gradle configuration or web application/build configuration. iOS validation is run by the dedicated `iOS validation` workflow; it tests the Swift packages and builds each iOS app as an unsigned simulator build. Android and web builds remain in their respective repositories and workflows.
 
