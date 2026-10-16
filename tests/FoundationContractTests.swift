@@ -1,0 +1,58 @@
+import Foundation
+import XCTest
+import SharedAPI
+import SharedModels
+import SharedSecurity
+
+final class FoundationContractTests: XCTestCase {
+    func testHealthContractUsesOnlyDefinedPathsAndHTTPS() throws {
+        XCTAssertEqual(Set(HealthEndpoint.allCases.map(\.path)), ["/health/live", "/health/ready"])
+
+        let request = try HealthEndpoint.ready.request(baseURL: URL(string: "https://api.example.test")!)
+        XCTAssertEqual(request.url?.absoluteString, "https://api.example.test/health/ready")
+        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertEqual(request.value(forHTTPHeaderField: "Accept"), "application/json")
+    }
+
+    func testHealthRequestRejectsNonHTTPSAndCredentialedBaseURLs() {
+        XCTAssertThrowsError(
+            try HealthEndpoint.live.request(baseURL: URL(string: "http://api.example.test")!)
+        )
+        XCTAssertThrowsError(
+            try HealthEndpoint.live.request(baseURL: URL(string: "https://api.example.test?x=1")!)
+        )
+    }
+
+    func testHealthAndErrorModelsMatchBackendContract() throws {
+        XCTAssertEqual(
+            try JSONDecoder().decode(HealthStatus.self, from: Data(#"{"status":"live"}"#.utf8)),
+            HealthStatus(status: .live)
+        )
+
+        let envelope = try JSONDecoder().decode(
+            APIErrorEnvelope.self,
+            from: Data(#"{"error":{"code":"SERVICE_UNAVAILABLE","message":"Service is temporarily unavailable.","requestId":"00000000-0000-4000-8000-000000000000"}}"#.utf8)
+        )
+        XCTAssertEqual(envelope.error.code, .serviceUnavailable)
+        XCTAssertEqual(envelope.error.requestId.uuidString.lowercased(), "00000000-0000-4000-8000-000000000000")
+        XCTAssertEqual(APIErrorCode.allCases.count, 14)
+    }
+
+    func testUnknownBackendErrorCodeFailsClosed() {
+        let data = Data(#"{"error":{"code":"NEW_UNREVIEWED_CODE","message":"Unavailable","requestId":"00000000-0000-4000-8000-000000000000"}}"#.utf8)
+        XCTAssertThrowsError(try JSONDecoder().decode(APIErrorEnvelope.self, from: data))
+    }
+
+    func testSecurityChainP0RemainsBlocked() {
+        XCTAssertEqual(SecurityReadiness.securityChainP0, .blocked)
+    }
+
+    #if !canImport(Security)
+    func testKeychainStoreDoesNotPretendToBeAvailableOffApplePlatforms() {
+        let store = KeychainSecureStore(service: "test")
+        XCTAssertThrowsError(try store.read(forKey: "item")) { error in
+            XCTAssertEqual(error as? SecureStoreError, .platformUnavailable)
+        }
+    }
+    #endif
+}
