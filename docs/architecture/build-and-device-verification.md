@@ -41,8 +41,8 @@ For manual release readiness, open [iOS validation](https://github.com/nikolausn
 
 Release responsibilities:
 
-- Prepare iOS updates for NIKNOLIG and NIKNOLIG Defense here and Android updates in [NIKNOLIG-Monorepo](https://github.com/nikolausnold/NIKNOLIG-Monorepo). Review the standalone NIKNOLIG and Defense repositories when coordinating changes; they are not fetched, synchronized, or released by this workflow.
-- Coordinate shared API and dependency compatibility across both monorepos before approval; passing iOS checks alone is not evidence that Android passed.
+- Prepare and validate iOS app and dependency updates for NIKNOLIG and NIKNOLIG Defense here. Prepare and validate Android updates separately in [NIKNOLIG-Monorepo](https://github.com/nikolausnold/NIKNOLIG-Monorepo). Standalone repositories, including those named `NIKNOLIG-iOS-` and `NIKNOLIG-Defense-iOS-`, are not fetched, synchronized, or released by this workflow.
+- Coordinate versioned shared API contract compatibility across both platforms before approving contract changes. Dependency updates, build results, artifacts, and release approvals remain platform-specific; passing iOS checks alone is not evidence that Android passed.
 - Keep SecurityChain-P0, backend approval, signing, and the physical-device acceptance requirements above as release blockers.
-- Obtain the founder's explicit approval for each app/version/platform through the founder-controlled [App Store Connect](https://appstoreconnect.apple.com/) or [Google Play Console](https://play.google.com/console/) account. GitHub readiness confirmation never substitutes for that approval.
+- For each iOS app/version, obtain the founder's explicit approval through the founder-controlled [App Store Connect](https://appstoreconnect.apple.com/) account. Android publication and its separate founder approval through [Google Play Console](https://play.google.com/console/) belong exclusively to the Android release process outside this repository. GitHub readiness confirmation never substitutes for either store approval.
 - No store credentials are configured here. A future store-upload workflow must use separately configured protected release environments with founder-only approval before accessing signing or store secrets. Do not enable publishing until those protections and store-account ownership have been verified.

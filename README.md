@@ -12,6 +12,19 @@ Independent SwiftUI foundations for NIKNOLIG and NIKNOLIG Defense, with local Sw
 - `docs/` — architecture, backend alignment, privacy, and device build/acceptance gates.
 - `tests/` — Swift package contract and fail-closed behavior tests.
 
+## iOS and Android separation
+
+This is the authoritative native iOS source and build repository for both apps. Android source, Gradle projects, APK/AAB artifacts, signing keys, dependency updates, and Google Play releases stay outside this repository.
+
+| Platform | Source and build responsibility | Publication |
+| --- | --- | --- |
+| iOS: NIKNOLIG and NIKNOLIG Defense | This monorepo; Swift/SwiftUI, SwiftPM and Xcode | App Store Connect, separately approved by the founder |
+| Android: NIKNOLIG and NIKNOLIG Defense | [NIKNOLIG-Monorepo](https://github.com/nikolausnold/NIKNOLIG-Monorepo), with the standalone [NIKNOLIG](https://github.com/nikolausnold/NIKNOLIG) and [NIKNOLIG-Defense](https://github.com/nikolausnold/NIKNOLIG-Defense) sources | Google Play Console, separately approved by the founder |
+
+The newly created [NIKNOLIG-iOS-](https://github.com/nikolausnold/NIKNOLIG-iOS-) and [NIKNOLIG-Defense-iOS-](https://github.com/nikolausnold/NIKNOLIG-Defense-iOS-) repositories still contain Android Gradle app configurations as checked on 2026-10-16. Their names do not make those projects native iOS sources. They are not build inputs, dependencies, or publication targets of this monorepo. No files have been moved to or changed in those repositories.
+
+Only reviewed, versioned backend contracts are coordinated across platforms; application code, dependency resolution, credentials, build artifacts, and release approvals remain separate. See [platform boundaries](docs/architecture/overview.md#platform-boundaries).
+
 ## Available validation
 
 Run the cross-package tests from the repository root:
@@ -33,6 +46,6 @@ The current Linux environment cannot run `xcodebuild` or validate the apps on ph
 
 Dependabot checks GitHub Actions and Swift package dependencies weekly and opens update pull requests. The Swift packages currently use local dependencies only; there are no external Swift versions to update yet. Every pull request runs shared-package tests and simulator builds for both apps on macOS.
 
-iOS app updates are prepared in this monorepo; Android app updates belong in [NIKNOLIG-Monorepo](https://github.com/nikolausnold/NIKNOLIG-Monorepo). NIKNOLIG and NIKNOLIG Defense must both be considered when updating shared dependencies or contracts. This setup does not modify or automate the Android or standalone repositories.
+iOS app and dependency updates are prepared and checked in this monorepo for both iOS apps. Android app and dependency updates are prepared and checked separately in [NIKNOLIG-Monorepo](https://github.com/nikolausnold/NIKNOLIG-Monorepo). A shared contract change requires compatibility review on each platform, not a shared dependency update or release. This setup does not modify or automate the Android or standalone repositories.
 
 App publication requires the founder's explicit confirmation through the respective founder-controlled store account. Nothing here signs, uploads, or publishes an app. See [update checks and publication gates](docs/architecture/build-and-device-verification.md#update-checks-and-publication-gates) for required repository settings and the manual readiness workflow.
