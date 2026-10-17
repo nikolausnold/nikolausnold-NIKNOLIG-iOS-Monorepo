@@ -1,0 +1,41 @@
+name: iOS validation
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  swift-package-tests:
+    name: Swift package tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run contract and security tests
+        run: swift test
+
+  ios-app-builds:
+    name: Build ${{ matrix.app }}
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: NIKNOLIG
+            project: apps/niknolig-ios/NIKNOLIG.xcodeproj
+            scheme: NIKNOLIG
+          - app: NIKNOLIG Defense
+            project: apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj
+            scheme: NIKNOLIGDefense
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build iOS simulator app without signing
+        run: >-
+          xcodebuild
+          -project "${{ matrix.project }}"
+          -scheme "${{ matrix.scheme }}"
+          -destination "generic/platform=iOS Simulator"
+          CODE_SIGNING_ALLOWED=NO
+          build
