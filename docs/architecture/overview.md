@@ -6,6 +6,15 @@ NIKNOLIG and NIKNOLIG Defense are separate iOS application targets, each with it
 
 The app targets are deliberately thin SwiftUI shells. They show the current security gate and contract-only health paths. They do not sign in, make network requests, pair devices, transfer data, or access sensors.
 
+## Platform boundaries
+
+- This monorepo owns the native iOS implementations of both apps. Android implementations remain in the Android repositories; do not import Android app code, Gradle build configuration, or APK/AAB artifacts here.
+- The local shared Swift packages are shared between the two iOS apps, not with Android. Each platform resolves, updates, tests, and approves its own dependencies independently.
+- iOS CI uses SwiftPM and Xcode and builds only the projects under `apps/`. It does not check out or build standalone repositories, including repositories whose names contain `iOS`.
+- Keep iOS signing identities, provisioning profiles, Keychain storage, and App Store Connect access separate from Android keystores and Google Play access. Matching identifier strings do not establish shared credentials, storage, or authorization.
+- Versioned backend contracts may be reviewed for compatibility across platforms. The external contract reference is documentation/model alignment only, not an Android build dependency or permission to enable backend operations.
+- Build results and release approvals apply only to the app, revision, and platform verified. An iOS approval never authorizes an Android release or vice versa; publication requires the founder's explicit confirmation in the respective store account.
+
 ## Swift packages
 
 - `SharedModels` defines the `HealthStatus` and `APIError` values in the current backend OpenAPI proposal. Unknown error codes fail decoding instead of being silently accepted.
