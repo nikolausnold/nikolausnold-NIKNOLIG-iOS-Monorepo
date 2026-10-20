@@ -8,6 +8,8 @@ Swift Package Manager can build and test the contract/security libraries on plat
 swift test
 ```
 
+The `.github/workflows/ios-validation.yml` workflow runs these tests and builds each iOS app independently on macOS. Simulator CI builds disable code signing and do not publish or release an app. Android and web builds are not part of this workflow.
+
 The iOS application projects require macOS, Xcode with an iOS SDK, and iOS 17 or later deployment support. From the repository root, build the separate simulator targets with:
 
 ```sh
@@ -15,7 +17,7 @@ xcodebuild -project apps/niknolig-ios/NIKNOLIG.xcodeproj -scheme NIKNOLIG -desti
 xcodebuild -project apps/niknolig-defense-ios/NIKNOLIGDefense.xcodeproj -scheme 'NIKNOLIG Defense' -destination 'generic/platform=iOS Simulator' build
 ```
 
-An Xcode build is not a release approval. To install on a physical device, select an appropriate development team and provisioning profile in Xcode, then verify each app independently on supported iPhone and iPad hardware. No signing credentials or device registration are included in this repository.
+An Xcode build is not a release approval. Production signing, provisioning, and distribution are **OFFEN** and require a separately approved iOS release process. To install on a physical device, select an authorized development team and provisioning profile in Xcode, then verify each app independently on supported iPhone and iPad hardware. No signing credentials or device registration are included in this repository.
 
 ## Verification required on Apple hardware
 
